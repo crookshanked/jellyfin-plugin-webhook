@@ -44,6 +44,9 @@
             <button id="btnAddMqtt" is="emby-button" type="button" class="raised button block">
                 <span>Add MQTT Destination</span>
             </button>
+            <button id="btnAddNtfy" is="emby-button" type="button" class="raised button block">
+                <span>Add Ntfy Destination</span>
+            </button>
             <br />
             <div id="configurationWrapper"></div>
             <br />
@@ -339,6 +342,25 @@
             <option value="AtLeastOnce">At Least Once</option>
             <option value="ExactlyOnce">Exactly Once</option>
         </select>
+    </div>
+</template>
+
+<template id="template-ntfy">
+    <div class="inputContainer">
+        <input is="emby-input" type="text" data-name="txtTopic" label="Topic:" required="required" />
+    </div>
+    <label class="checkboxContainer">
+        <input is="emby-checkbox" type="checkbox" data-name="chkUseCredentials"/>
+        <span>Use Credentials (leave fields blank if using another authentication method or none)</span>
+    </label>
+    <div class="inputContainer">
+        <input is="emby-input" type="text" data-name="txtUsername" label="Username (Basic Auth):"/>
+    </div>
+    <div class="inputContainer">
+        <input is="emby-input" type="password" data-name="txtPassword" label="Password (Basic Auth):"/>
+    </div>
+    <div class="inputContainer">
+        <input is="emby-input" type="password" data-name="txtToken" label="Token (Bearer Auth):"/>
     </div>
 </template>
 

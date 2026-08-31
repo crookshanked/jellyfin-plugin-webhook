@@ -6,6 +6,7 @@ using Jellyfin.Plugin.Webhook.Destinations.Generic;
 using Jellyfin.Plugin.Webhook.Destinations.GenericForm;
 using Jellyfin.Plugin.Webhook.Destinations.Gotify;
 using Jellyfin.Plugin.Webhook.Destinations.Mqtt;
+using Jellyfin.Plugin.Webhook.Destinations.Ntfy;
 using Jellyfin.Plugin.Webhook.Destinations.Pushbullet;
 using Jellyfin.Plugin.Webhook.Destinations.Pushover;
 using Jellyfin.Plugin.Webhook.Destinations.Slack;
@@ -48,6 +49,7 @@ public class PluginServiceRegistrator : IPluginServiceRegistrator
         serviceCollection.AddScoped<IWebhookClient<SlackOption>, SlackClient>();
         serviceCollection.AddScoped<IWebhookClient<SmtpOption>, SmtpClient>();
         serviceCollection.AddScoped<IWebhookClient<MqttOption>, MqttClient>();
+        serviceCollection.AddScoped<IWebhookClient<NtfyOption>, NtfyClient>();
 
         // Register sender.
         serviceCollection.AddScoped<IWebhookSender, WebhookSender>();
