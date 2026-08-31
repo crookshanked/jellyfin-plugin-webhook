@@ -581,6 +581,39 @@ export default function (view) {
                 return config;
             }
         },
+        ntfy: {
+            btnAdd: document.querySelector("#btnAddNtfy"),
+            template: document.querySelector("#template-ntfy"),
+            addConfig: function (config) {
+                const template = document.createElement("div");
+                template.dataset.type = "ntfy";
+                template.appendChild(Webhook.baseConfig.template.cloneNode(true).content);
+                template.appendChild(Webhook.ntfy.template.cloneNode(true).content);
+
+                const baseConfig = Webhook.baseConfig.addConfig(template, "Ntfy", config.WebhookName);
+                Webhook.configurationWrapper.appendChild(baseConfig);
+
+                // Load configuration
+                Webhook.ntfy.setConfig(config, baseConfig);
+            },
+            setConfig: function (config, element) {
+                Webhook.baseConfig.setConfig(config, element);
+                element.querySelector("[data-name=txtTopic]").value = config.Topic || "";
+                element.querySelector("[data-name=chkUseCredentials]").checked = config.UseCredentials || false;
+                element.querySelector("[data-name=txtUsername]").value = config.Username || "";
+                element.querySelector("[data-name=txtPassword]").value = config.Password || "";
+                element.querySelector("[data-name=txtToken]").value = config.Token || "";
+            },
+            getConfig: function (element) {
+                const config = Webhook.baseConfig.getConfig(element);
+                config.Topic = element.querySelector("[data-name=txtTopic]").value || "";
+                config.UseCredentials = element.querySelector("[data-name=chkUseCredentials]").checked || false;
+                config.Username = element.querySelector("[data-name=txtUsername]").value || "";
+                config.Password = element.querySelector("[data-name=txtPassword]").value || "";
+                config.Token = element.querySelector("[data-name=txtToken]").value || "";
+                return config;
+            }
+        },
         mqtt: {
             btnAdd: document.querySelector("#btnAddMqtt"),
             template: document.querySelector("#template-mqtt"),
@@ -634,6 +667,7 @@ export default function (view) {
             Webhook.slack.btnAdd.addEventListener("click", Webhook.slack.addConfig);
             Webhook.smtp.btnAdd.addEventListener("click", Webhook.smtp.addConfig);
             Webhook.mqtt.btnAdd.addEventListener("click", Webhook.mqtt.addConfig);
+            Webhook.ntfy.btnAdd.addEventListener("click", Webhook.ntfy.addConfig);
             document.querySelector("#saveConfig").addEventListener("click", Webhook.saveConfig);
 
             await Webhook.userFilter.populate();
@@ -704,6 +738,12 @@ export default function (view) {
                 config.MqttOptions.push(Webhook.mqtt.getConfig(mqttConfigs[i]));
             }
 
+            config.NtfyOptions = [];
+            const ntfyConfigs = document.querySelectorAll("[data-type=ntfy]");
+            for (let i = 0; i < ntfyConfigs.length; i++) {
+                config.NtfyOptions.push(Webhook.ntfy.getConfig(ntfyConfigs[i]));
+            }
+
             window.ApiClient.updatePluginConfiguration(Webhook.pluginId, config).then(Dashboard.processPluginConfigurationUpdateResult);
         },
         loadConfig: function () {
@@ -745,6 +785,10 @@ export default function (view) {
 
                 for (let i = 0; i < config.MqttOptions.length; i++) {
                     Webhook.mqtt.addConfig(config.MqttOptions[i]);
+                }
+
+                for (let i = 0; i < config.NtfyOptions.length; i++) {
+                    Webhook.ntfy.addConfig(config.NtfyOptions[i]);
                 }
             });
 

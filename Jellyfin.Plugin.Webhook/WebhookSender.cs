@@ -9,6 +9,7 @@ using Jellyfin.Plugin.Webhook.Destinations.Generic;
 using Jellyfin.Plugin.Webhook.Destinations.GenericForm;
 using Jellyfin.Plugin.Webhook.Destinations.Gotify;
 using Jellyfin.Plugin.Webhook.Destinations.Mqtt;
+using Jellyfin.Plugin.Webhook.Destinations.Ntfy;
 using Jellyfin.Plugin.Webhook.Destinations.Pushbullet;
 using Jellyfin.Plugin.Webhook.Destinations.Pushover;
 using Jellyfin.Plugin.Webhook.Destinations.Slack;
@@ -34,6 +35,7 @@ public class WebhookSender : IWebhookSender
     private readonly IWebhookClient<SlackOption> _slackClient;
     private readonly IWebhookClient<SmtpOption> _smtpClient;
     private readonly IWebhookClient<MqttOption> _mqttClient;
+    private readonly IWebhookClient<NtfyOption> _ntfyClient;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="WebhookSender"/> class.
@@ -48,6 +50,7 @@ public class WebhookSender : IWebhookSender
     /// <param name="slackClient">Instance of the <see cref="IWebhookClient{SlackOption}"/>.</param>
     /// <param name="smtpClient">Instance of the <see cref="IWebhookClient{SmtpOption}"/>.</param>
     /// <param name="mqttClient">Instance of the <see cref="IWebhookClient{mqttClient}"/>.</param>
+    /// <param name="ntfyClient">Instance of <see cref="IWebhookClient{NtfyOption}"/>.</param>
     public WebhookSender(
         ILogger<WebhookSender> logger,
         IWebhookClient<DiscordOption> discordClient,
@@ -58,7 +61,8 @@ public class WebhookSender : IWebhookSender
         IWebhookClient<PushoverOption> pushoverClient,
         IWebhookClient<SlackOption> slackClient,
         IWebhookClient<SmtpOption> smtpClient,
-        IWebhookClient<MqttOption> mqttClient)
+        IWebhookClient<MqttOption> mqttClient,
+        IWebhookClient<NtfyOption> ntfyClient)
     {
         _logger = logger;
         _discordClient = discordClient;
@@ -70,6 +74,7 @@ public class WebhookSender : IWebhookSender
         _slackClient = slackClient;
         _smtpClient = smtpClient;
         _mqttClient = mqttClient;
+        _ntfyClient = ntfyClient;
     }
 
     private static PluginConfiguration Configuration =>
@@ -129,6 +134,12 @@ public class WebhookSender : IWebhookSender
         foreach (var option in Configuration.MqttOptions.Where(o => o.NotificationTypes.Contains(notificationType)))
         {
             await SendNotification(_mqttClient, option, itemData, itemType)
+                .ConfigureAwait(false);
+        }
+
+        foreach (var option in Configuration.NtfyOptions.Where(o => o.NotificationTypes.Contains(notificationType)))
+        {
+            await SendNotification(_ntfyClient, option, itemData, itemType)
                 .ConfigureAwait(false);
         }
     }

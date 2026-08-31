@@ -4,6 +4,7 @@ using Jellyfin.Plugin.Webhook.Destinations.Generic;
 using Jellyfin.Plugin.Webhook.Destinations.GenericForm;
 using Jellyfin.Plugin.Webhook.Destinations.Gotify;
 using Jellyfin.Plugin.Webhook.Destinations.Mqtt;
+using Jellyfin.Plugin.Webhook.Destinations.Ntfy;
 using Jellyfin.Plugin.Webhook.Destinations.Pushbullet;
 using Jellyfin.Plugin.Webhook.Destinations.Pushover;
 using Jellyfin.Plugin.Webhook.Destinations.Slack;
@@ -32,6 +33,7 @@ public class PluginConfiguration : BasePluginConfiguration
         SlackOptions = Array.Empty<SlackOption>();
         SmtpOptions = Array.Empty<SmtpOption>();
         MqttOptions = Array.Empty<MqttOption>();
+        NtfyOptions = Array.Empty<NtfyOption>();
     }
 
     /// <summary>
@@ -83,4 +85,9 @@ public class PluginConfiguration : BasePluginConfiguration
     /// Gets or sets the mqtt options.
     /// </summary>
     public MqttOption[] MqttOptions { get; set; }
+
+    /// <summary>
+    /// Gets or sets the ntfy options.
+    /// </summary>
+    public NtfyOption[] NtfyOptions { get; set; }
 }
